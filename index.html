@@ -1,137 +1,96 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confirm Your CampusBus Signup</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7fa;
-            margin: 0;
-            padding: 20px;
-            line-height: 1.6;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-        .header {
-            background: linear-gradient(135deg, #007bff, #0056b3);
-            color: white;
-            text-align: center;
-            padding: 40px 20px;
-        }
-        .header h1 {
-            margin: 0;
-            font-size: 2.5em;
-            font-weight: 300;
-        }
-        .header p {
-            margin: 10px 0 0;
-            opacity: 0.9;
-            font-size: 1.1em;
-        }
-        .content {
-            padding: 40px 30px;
-            text-align: center;
-        }
-        .content h2 {
-            color: #333;
-            font-size: 1.8em;
-            margin-bottom: 20px;
-        }
-        .content p {
-            color: #666;
-            font-size: 1.1em;
-            margin-bottom: 30px;
-        }
-        .button {
-            display: inline-block;
-            background: linear-gradient(135deg, #28a745, #20c997);
-            color: white;
-            padding: 15px 40px;
-            text-decoration: none;
-            border-radius: 50px;
-            font-size: 1.2em;
-            font-weight: bold;
-            margin: 20px 0;
-            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
-            transition: transform 0.2s ease;
-        }
-        .button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
-        }
-        .footer {
-            background-color: #f8f9fa;
-            padding: 30px;
-            text-align: center;
-            font-size: 0.9em;
-            color: #888;
-            border-top: 1px solid #e9ecef;
-        }
-        .footer .app-info {
-            margin-bottom: 10px;
-        }
-        .footer .powered-by {
-            margin-bottom: 5px;
-        }
-        .footer .created-by {
-            font-style: italic;
-        }
-        @media (max-width: 600px) {
-            .container {
-                margin: 0;
-                border-radius: 0;
-            }
-            .header {
-                padding: 30px 20px;
-            }
-            .header h1 {
-                font-size: 2em;
-            }
-            .content {
-                padding: 30px 20px;
-            }
-        }
-    </style>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Confirming — CampusBus</title>
+<style>
+  body{font-family:Inter,Segoe UI,system-ui; background:#f4f7fa; margin:0; padding:24px; color:#222}
+  .card{max-width:720px;margin:40px auto;background:#fff;border-radius:12px;padding:28px;box-shadow:0 10px 30px rgba(0,0,0,0.08);text-align:center}
+  .btn{display:inline-block;margin-top:18px;padding:12px 20px;border-radius:999px;text-decoration:none;font-weight:600}
+  .ok{background:#28a745;color:#fff}
+  .link{word-break:break-all;color:#007bff}
+  .small{font-size:0.9rem;color:#666;margin-top:12px}
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>CampusBus</h1>
-            <p>Your Ride to Campus, Simplified</p>
-        </div>
-        
-        <div class="content">
-            <h2>Confirm Your Signup</h2>
-            <p>We're excited to have you join CampusBus! To get started and ensure your account is secure, please confirm your email address by clicking the button below.</p>
-            
-            <a href="{{ .ConfirmationURL }}" class="button">Confirm My Email</a>
-            
-            <p>If the button doesn't work, you can copy and paste this link into your browser:<br>
-            <strong>{{ .ConfirmationURL }}</strong></p>
-            
-            <p>Need help? Reply to this email or contact support@campusbus.app.</p>
-        </div>
-        
-        <div class="footer">
-            <div class="app-info">
-                <strong>CampusBus</strong> – Powered by PTSNSU University
-            </div>
-            <div class="powered-by">
-                Making campus commutes effortless for the PTSNSU community.
-            </div>
-            <div class="created-by">
-                Created and owned by Aditya Barman
-            </div>
-            <p>&copy; 2025 CampusBus. All rights reserved.</p>
-        </div>
-    </div>
+  <div class="card" id="card">
+    <h1>Confirming your CampusBus account…</h1>
+    <p id="status">Finishing verification and opening the app. If nothing happens, use the link below.</p>
+
+    <a id="manualLink" class="btn link" href="#" style="display:none"></a>
+
+    <p class="small">If you are on a desktop, copy the link and paste into your mobile browser or scan/link to your phone.</p>
+  </div>
+
+<script>
+(function(){
+  // 1) Grab fragment (everything after #). Supabase puts session as fragment (#access_token=...&refresh_token=...)
+  const frag = window.location.hash || '';
+  const params = new URLSearchParams(frag.startsWith('#') ? frag.substring(1) : frag);
+
+  // If supabase passed tokens in query instead of fragment (edge cases), also check search
+  const qparams = new URLSearchParams(window.location.search);
+  if (!params.toString() && qparams.toString()) {
+    // convert query to fragment-form
+    for (const [k,v] of qparams.entries()) params.set(k,v);
+  }
+
+  // Build a fallback link that opens the app using your custom scheme.
+  // IMPORTANT: Replace 'myapp://auth/callback' with your actual app scheme & path.
+  const APP_SCHEME = 'myapp://auth/callback';
+
+  function setManual(textUrl) {
+    const m = document.getElementById('manualLink');
+    m.href = textUrl;
+    m.textContent = 'Open in CampusBus app';
+    m.style.display = 'inline-block';
+  }
+
+  // If no fragment/token present -> show message and confirmation URL for manual copy
+  if (!params.toString()) {
+    document.getElementById('status').textContent = 'No session token found in the URL. If this page was opened from the email, try clicking the email button again or use the manual confirm link below.';
+    // Show raw confirmation url as fallback if available ({{ .ConfirmationURL }} will be placed in email)
+    // But when redirected from Supabase, you should normally get the fragment.
+    setManual(window.location.href);
+    return;
+  }
+
+  // If fragment contains access_token (session flow)
+  if (params.has('access_token')) {
+    // Forward to app with the same fragment so the app can parse it exactly like the web flow
+    const target = APP_SCHEME + window.location.hash;
+    // For mobile browsers, setting location should open the app if installed
+    window.location.href = target;
+
+    // As a fallback after a short delay, show a clickable link so user can tap if auto-open blocked
+    setTimeout(() => {
+      document.getElementById('status').textContent = 'If your CampusBus app did not open automatically, tap the button below.';
+      setManual(target);
+    }, 800);
+    return;
+  }
+
+  // If fragment contains token (older flow) e.g. token=...&type=signup
+  if (params.has('token')) {
+    // Construct the Supabase verify URL (optional)
+    const projHost = window.location.origin; // not used here
+    const token = params.get('token');
+    // We can redirect to app with token as fragment param (app expects access_token format though).
+    const target2 = APP_SCHEME + '#token=' + encodeURIComponent(token) + '&type=' + encodeURIComponent(params.get('type')||'signup');
+    window.location.href = target2;
+    setTimeout(() => {
+      document.getElementById('status').textContent = 'If your CampusBus app did not open automatically, tap the button below.';
+      setManual(target2);
+    }, 800);
+    return;
+  }
+
+  // Default fallback
+  document.getElementById('status').textContent = 'Verification data found. Opening the app…';
+  const fallback = APP_SCHEME + window.location.hash;
+  setManual(fallback);
+})();
+</script>
 </body>
 </html>
