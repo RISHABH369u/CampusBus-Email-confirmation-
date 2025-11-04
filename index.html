@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Your CampusBus Signup</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7fa;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+        .header p {
+            margin: 10px 0 0;
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        .content {
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .content h2 {
+            color: #333;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+        }
+        .content p {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+        }
+        .button {
+            display: inline-block;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 15px 40px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+            transition: transform 0.2s ease;
+        }
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 30px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #888;
+            border-top: 1px solid #e9ecef;
+        }
+        .footer .app-info {
+            margin-bottom: 10px;
+        }
+        .footer .powered-by {
+            margin-bottom: 5px;
+        }
+        .footer .created-by {
+            font-style: italic;
+        }
+        @media (max-width: 600px) {
+            .container {
+                margin: 0;
+                border-radius: 0;
+            }
+            .header {
+                padding: 30px 20px;
+            }
+            .header h1 {
+                font-size: 2em;
+            }
+            .content {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>CampusBus</h1>
+            <p>Your Ride to Campus, Simplified</p>
+        </div>
+        
+        <div class="content">
+            <h2>Confirm Your Signup</h2>
+            <p>We're excited to have you join CampusBus! To get started and ensure your account is secure, please confirm your email address by clicking the button below.</p>
+            
+            <a href="{{ .ConfirmationURL }}" class="button">Confirm My Email</a>
+            
+            <p>If the button doesn't work, you can copy and paste this link into your browser:<br>
+            <strong>{{ .ConfirmationURL }}</strong></p>
+            
+            <p>Need help? Reply to this email or contact support@campusbus.app.</p>
+        </div>
+        
+        <div class="footer">
+            <div class="app-info">
+                <strong>CampusBus</strong> – Powered by PTSNSU University
+            </div>
+            <div class="powered-by">
+                Making campus commutes effortless for the PTSNSU community.
+            </div>
+            <div class="created-by">
+                Created and owned by Aditya Barman
+            </div>
+            <p>&copy; 2025 CampusBus. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
